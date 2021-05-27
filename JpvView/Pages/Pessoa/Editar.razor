@@ -1,0 +1,29 @@
+﻿@page "/pessoa/editar/{id:guid}"
+@inject IHttpClientFactory _clientFactory
+@inject NavigationManager navigation
+
+<h3>Editar Projeto</h3>
+
+<FormPessoa PessoaModel="@models" ButtonTxt="Atualizar" OnValidSubmit="@EditarPessoa" />
+
+@code {
+    PessoaModel models = new PessoaModel();
+
+    [Parameter] public Guid id { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+
+        var client = _clientFactory.CreateClient("jpv");
+
+        models = await client.GetFromJsonAsync<PessoaModel>($"/pessoa/{id}");
+
+    }
+    async Task EditarPessoa()
+    {
+        var teste = _clientFactory.CreateClient("jpv");
+        await teste.PutAsJsonAsync("/pessoa/atualiza", models);
+        navigation.NavigateTo("pessoa");
+    }
+
+}

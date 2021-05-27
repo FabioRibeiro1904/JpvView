@@ -1,0 +1,20 @@
+﻿@page "/pessoa/criar"
+
+@inject IHttpClientFactory _clientFactory
+@inject NavigationManager navigation
+
+<h3>Cadastrar Projeto</h3>
+
+<FormPessoa PessoaModel="@models" ButtonTxt="Adicionar" OnValidSubmit="@CriarPessoa" />
+@code {
+    PessoaModel models = new PessoaModel();
+
+    async Task CriarPessoa()
+    {
+
+        var client = _clientFactory.CreateClient("jpv");
+
+        await client.PostAsJsonAsync("/pessoa/criar", models);
+        navigation.NavigateTo("pessoa");
+    }
+}

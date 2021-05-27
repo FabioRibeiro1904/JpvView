@@ -1,0 +1,82 @@
+﻿@page "/pessoa"
+
+
+@using System.Net.Http
+@inject IHttpClientFactory _clientFactory
+
+<h3>Lista de Pessoas Fisicas</h3>
+
+<div>
+    <a href="/pessoa/criar" class="btn btn-success">Adicionar Pessoa</a>
+</div>
+
+<div>
+    @if (string.IsNullOrWhiteSpace(errorString) == false)
+    {
+        <div class="h2">@errorString</div>
+    }
+    else if (models is null)
+    {
+        <div class="h4">Loading...</div>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Nome</th>
+                    <th>Cpf</th>
+                    <th>Renda</th>
+                    <th>Nascimento</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var view in @models)
+                {
+
+                        <tr>
+                            <td>@view.Nome</td>
+                            <th>@view.Cpf</th>
+                            <th>@view.Renda</th>
+                            <th>@view.Nascimento</th>
+                            <th>
+                                <a class="btn btn-success" href="/pessoa/editar/@view.Id">Editar</a>
+                                <button class="btn btn-danger" favicon-ico="" @onclick="@(()=>ExcluirPessoa(view.Id))">Excluir</button>
+                            </th>
+                        </tr>
+                    
+
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+
+@code {
+
+    List<PessoaModel> models;
+    PessoaModel pessoaModel;
+    string errorString = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarPessoa();
+    }
+
+    async Task CarregarPessoa()
+    {
+        var client = _clientFactory.CreateClient("jpv");
+        models = await client.GetFromJsonAsync<List<PessoaModel>>("/pessoas");
+    }
+
+    async Task ExcluirPessoa(Guid id)
+    {
+        var client = _clientFactory.CreateClient("jpv");
+        await client.DeleteAsync($"/pessoa/deleta/{id}");
+        await CarregarPessoa();
+    }
+}
+

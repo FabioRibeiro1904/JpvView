@@ -1,0 +1,40 @@
+﻿
+<EditForm Model="@pessoaModel" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="col-1">
+        <div class="form-group">
+            <label>Nome</label>
+            <InputText @bind-Value="@pessoaModel.Nome"></InputText>
+            <ValidationMessage For="@(() => pessoaModel.Nome)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+            <label>Cpf</label>
+            <InputText @bind-Value="@pessoaModel.Cpf"></InputText>
+            <ValidationMessage For="@(() => pessoaModel.Cpf)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+            <label>Renda</label>
+            <InputNumber @bind-Value="@pessoaModel.Renda"></InputNumber>
+            <ValidationMessage For="@(() => pessoaModel.Renda)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+            <label>Data de Nascimento</label>
+            <InputDate @bind-Value="@pessoaModel.Nascimento"></InputDate>
+            <ValidationMessage For="@(() => pessoaModel.Nascimento)"></ValidationMessage>
+        </div>
+
+        <button type="submit" class="btn btn-primary">@ButtonTxt</button>
+   </div>
+
+</EditForm>
+
+@code {
+    [Parameter] public PessoaModel pessoaModel { get; set; }
+    [Parameter] public string ButtonTxt { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+}
